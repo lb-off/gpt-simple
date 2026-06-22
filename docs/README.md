@@ -1,6 +1,6 @@
 # GPT-Simple documentation
 
-These guides go deeper than the [project README](../README.md), which
+These guides go deeper than the [project README](https://github.com/lb-off/gpt-simple/blob/main/README.md), which
 covers installation and a quick start. Each page owns a single concern.
 
 ## Guides

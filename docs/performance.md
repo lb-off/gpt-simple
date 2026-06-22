@@ -18,7 +18,7 @@ is meaningless without the model size and the GPU.
 
 ## The run
 
-The configuration is [`examples/configs/pretrain_2.8b_15b.yaml`](../examples/configs/pretrain_2.8b_15b.yaml).
+The configuration is [`examples/configs/pretrain_2.8b_15b.yaml`](https://github.com/lb-off/gpt-simple/blob/main/examples/configs/pretrain_2.8b_15b.yaml).
 
 | Property | Value |
 | --- | --- |
@@ -158,7 +158,7 @@ In rough order of payoff, to push the realized MFU higher:
 These figures describe one specific run. The authoritative inputs are the
 code and config:
 
-- Run configuration: [`examples/configs/pretrain_2.8b_15b.yaml`](../examples/configs/pretrain_2.8b_15b.yaml).
+- Run configuration: [`examples/configs/pretrain_2.8b_15b.yaml`](https://github.com/lb-off/gpt-simple/blob/main/examples/configs/pretrain_2.8b_15b.yaml).
 - Model architecture and parameter count: `src/gpt_simple/model.py`.
 - A100 bf16 peak (312 TFLOPS dense) is NVIDIA's published spec; substitute
   your GPU's peak when computing MFU on other hardware

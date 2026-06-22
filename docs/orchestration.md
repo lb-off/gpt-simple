@@ -52,7 +52,7 @@ The bundled templates already implement these checks.
 ## Templates
 
 Ready-to-adapt templates live in
-[`examples/orchestrators/`](../examples/orchestrators/):
+[`examples/orchestrators/`](https://github.com/lb-off/gpt-simple/tree/main/examples/orchestrators):
 
 | Template | Use case |
 | -------- | -------- |

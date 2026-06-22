@@ -1,0 +1,43 @@
+site_name: GPT-Simple
+site_description: A clean, readable framework for pretraining language models from scratch
+site_url: https://lb-off.github.io/gpt-simple/
+repo_url: https://github.com/lb-off/gpt-simple
+repo_name: lb-off/gpt-simple
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+nav:
+  - Home: README.md
+  - Architecture: architecture.md
+  - Configuration: configuration.md
+  - Data pipeline: data.md
+  - Training: training.md
+  - Checkpointing & resume: checkpointing-and-resume.md
+  - Orchestration: orchestration.md
+  - Inference: inference.md
+  - Hardware tuning: hardware-tuning.md
+  - Performance: performance.md
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite

@@ -108,7 +108,7 @@ locations without loading weights or touching CUDA.
 `batch-generate` is a plain CLI entry point with no orchestrator
 assumptions. To fan out across a job array, shard the input **by model**
 (one model per task) so no checkpoint is loaded twice. See
-[`examples/orchestrators/`](../examples/orchestrators/) for inference job
+[`examples/orchestrators/`](https://github.com/lb-off/gpt-simple/tree/main/examples/orchestrators) for inference job
 templates.
 
 ---

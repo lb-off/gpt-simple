@@ -197,3 +197,6 @@ temp/
 # that should not ship with the open-source library).
 private/
 
+
+# MkDocs build output
+site/

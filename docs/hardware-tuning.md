@@ -219,7 +219,7 @@ config and launch change:
 
 For a concrete, site-specific worked example (partition names, module
 loads, scheduler headers), see the notes alongside the templates in
-[`examples/orchestrators/`](../examples/orchestrators/).
+[`examples/orchestrators/`](https://github.com/lb-off/gpt-simple/tree/main/examples/orchestrators).
 
 ## Further reading
 
