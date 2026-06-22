@@ -1,0 +1,103 @@
+# =============================================================================
+# 2.8B-class pretraining on 15B tokens — 8x A100 80GB single-node (Jean Zay)
+# =============================================================================
+# Effective tokens per step:
+#   per_device_batch_size (4) * grad_accum (8) * world_size (8) * max_length (2048)
+#   = 524,288 ≈ 0.52M tok/step
+# Budget:
+#   max_steps (28,800) * 0.52M ≈ 15B tokens
+# Curriculum:
+#   Phase 0 (9B): web-heavy general pass
+#   Phase 1 (6B): reasoning emphasis (more code/math/qa)
+# =============================================================================
+
+model:
+  # 34 * 12 * 2560^2 + 50304 * 2560 ≈ 2.80B params (tied embeddings).
+  n_embd: 2560
+  n_layer: 34
+  n_head: 20                       # head_dim = 128 — best for FlashAttention on A100
+  n_positions: 2048
+  dropout: 0.0
+  use_bias: false
+  activation: swish                # SwiGLU MLP
+  norm: rmsnorm
+  norm_eps: 1.0e-5
+  attention_mode: causal
+  rope_base: 10000.0
+
+data:
+  # path = parent of {train,val}/<bucket>  (buckets: code, math, qa, web, wiki)
+  path: /path/to/dataset/tokenized
+  tokenizer: gpt2
+  format: pretokenized
+  max_length: 2048
+  overlap_size: 256
+  packing: true
+  num_workers: 4                   # min shards = 157 (math); 157/8/4 ≈ 4.9 → ok
+
+  curriculum:
+    # ── Phase 0: general (9B tokens, 60%) ───────────────────────────
+    # Bucket demand vs inventory (all comfortably under):
+    #   web  4.5B / 25.4B   wiki 2.25B / 9.3B   code 1.35B / 16.0B
+    #   math 0.45B / 3.6B   qa   0.45B / 2.7B
+    - duration_tokens: 9_000_000_000
+      mix:
+        web:  0.50
+        wiki: 0.25
+        code: 0.15
+        math: 0.05
+        qa:   0.05
+
+    # ── Phase 1: reasoning emphasis (6B tokens, 40%) ────────────────
+    # Bucket demand vs inventory:
+    #   web 1.8B / 25.4B    code 2.1B / 16.0B   wiki 0.6B / 9.3B
+    #   math 0.9B / 3.6B    qa   0.6B / 2.7B
+    - duration_tokens: 6_000_000_000
+      mix:
+        web:  0.30
+        code: 0.35
+        wiki: 0.10
+        math: 0.15
+        qa:   0.10
+
+optimizer:
+  learning_rate: 2.0e-4            # peak LR; standard range for 2.8B-class
+  weight_decay: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  max_grad_norm: 1.0
+  warmup_steps: 500                # ~1.7% of training
+  # decay_steps left unset → cosine spans (warmup_steps … max_steps)
+  min_lr_ratio: 0.1                # floor at 10% of peak
+
+training:
+  per_device_batch_size: 4
+  gradient_accumulation_steps: 8
+  max_steps: 28800
+
+  gradient_checkpointing: true
+  compile: true
+  mixed_precision: bf16            # A100 supports bf16 natively
+  seed: 42
+
+  logging_steps: 20                # ~10s of logs at full throughput
+  eval_steps: 1000
+  save_steps: 500                  # checkpoint every ~250M tokens
+  max_eval_batches: 100
+
+  # Default output_dir; override at submission time via
+  # `--training.output_dir $SCRATCH/runs/<run_name>` (see sbatch script).
+  output_dir: ./outputs/pretrain_2.8b_15b
+
+  resume: auto                     # chain-friendly: every restart picks up latest ckpt
+  keep_last_k: 3
+  keep_milestone_every: 5000       # ~6 milestones over the run, never deleted
+
+  # walltime is auto-detected from SLURM_JOB_END_TIME; this is the safety
+  # margin to save a 2.8B checkpoint (~30 GB) on Lustre.
+  walltime_reserve_seconds: 600
+
+  # W&B — uncomment to enable (run `wandb login` or set WANDB_API_KEY first).
+  # wandb_project: gpt-simple-pretrain
+  # wandb_run_name: pretrain_2.8b_15b_v1

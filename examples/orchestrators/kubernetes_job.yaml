@@ -1,0 +1,76 @@
+# Kubernetes Job template for gpt_simple.
+#
+# How it works
+#   - restartPolicy: OnFailure makes the pod re-spawn whenever the
+#     training container exits non-zero (orchestrator OOM, eviction,
+#     hardware error, etc.).  On clean exit code 0 the Job completes.
+#   - When the pod is evicted, k8s sends SIGTERM first (with a
+#     terminationGracePeriodSeconds window).  Our trainer catches
+#     SIGTERM and saves a shutdown checkpoint before exiting 0, so the
+#     Job is considered complete from k8s's point of view.  If you want
+#     the cluster to immediately respawn after the graceful save, use
+#     a Wrapper Job + CronJob pair (see below) or set
+#     restartPolicy: Always with a Deployment.
+#   - The output_dir lives on a PersistentVolumeClaim so checkpoints
+#     survive pod restarts; on respawn the trainer picks up the latest
+#     checkpoint via training.resume=auto.
+#
+# Required prerequisites
+#   1. A ConfigMap named "gpt-simple-config" containing config.yaml:
+#      kubectl create configmap gpt-simple-config --from-file=config.yaml
+#   2. A PVC named "gpt-simple-outputs" with enough capacity for
+#      checkpoints (model size × keep_last_k + headroom).
+#   3. An image that has the gpt-simple CLI on PATH.
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpt-simple-pretrain
+spec:
+  backoffLimit: 50
+  template:
+    metadata:
+      labels:
+        app: gpt-simple-pretrain
+    spec:
+      restartPolicy: OnFailure
+      # Give the trainer up to 10 minutes after SIGTERM to save a
+      # graceful checkpoint before k8s escalates to SIGKILL.
+      terminationGracePeriodSeconds: 600
+      containers:
+        - name: trainer
+          image: your-registry/gpt-simple:latest
+          imagePullPolicy: IfNotPresent
+          # Equivalent to: gpt-simple train --config /configs/config.yaml
+          # with resume defaulting to "auto".
+          command:
+            - gpt-simple
+            - train
+            - --config
+            - /configs/config.yaml
+            - --training.output_dir
+            - /outputs
+          resources:
+            limits:
+              nvidia.com/gpu: 4
+              memory: 128Gi
+            requests:
+              nvidia.com/gpu: 4
+              memory: 128Gi
+          env:
+            # Optional: cap each pod's wall-clock budget (seconds).
+            # The trainer auto-saves a checkpoint before this fires.
+            - name: GPT_SIMPLE_MAX_RUNTIME
+              value: "7200"  # 2h
+          volumeMounts:
+            - name: outputs
+              mountPath: /outputs
+            - name: config
+              mountPath: /configs
+      volumes:
+        - name: outputs
+          persistentVolumeClaim:
+            claimName: gpt-simple-outputs
+        - name: config
+          configMap:
+            name: gpt-simple-config

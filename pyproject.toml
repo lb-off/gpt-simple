@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpt-simple"
+version = "0.1.0"
+description = "A clean, efficient framework for pretraining language models from scratch"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0.0",
+    "numpy>=1.24.0,<2.0",
+    "transformers>=4.36.0",
+    "accelerate>=0.20.0",
+    "sentencepiece>=0.1.99",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+wandb = ["wandb>=0.15.0"]
+cli = ["rich>=13.0"]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1.0",
+    "wandb>=0.15.0",
+    "rich>=13.0",
+]
+
+[project.scripts]
+gpt-simple = "gpt_simple.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests prepend the project root to sys.path before importing the package,
+# so imports legitimately follow a statement (E402).
+"tests/*" = ["E402"]
+
+[tool.pytest.ini_options]
+markers = [
+    "e2e: end-to-end tests that spawn the gpt-simple CLI as a subprocess (slow, default-included)",
+]
