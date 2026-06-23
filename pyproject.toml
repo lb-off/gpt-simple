@@ -3,12 +3,23 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gpt-simple"
+name = "gpt-simple-lm"
 version = "0.1.0"
 description = "A clean, efficient framework for pretraining language models from scratch"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
+authors = [{ name = "Louis Bertucci" }]
+keywords = ["llm", "pretraining", "gpt", "pytorch", "transformer", "language-model"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "torch>=2.0.0",
     "numpy>=1.24.0,<2.0",
@@ -30,6 +41,12 @@ dev = [
 
 [project.scripts]
 gpt-simple = "gpt_simple.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/lb-off/gpt-simple"
+Documentation = "https://lb-off.github.io/gpt-simple/"
+Repository = "https://github.com/lb-off/gpt-simple"
+Issues = "https://github.com/lb-off/gpt-simple/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
