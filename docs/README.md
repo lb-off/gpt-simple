@@ -1,9 +1,36 @@
-# GPT-Simple documentation
+# GPT-Simple
 
-These guides go deeper than the [project README](https://github.com/lb-off/gpt-simple/blob/main/README.md), which
-covers installation and a quick start. Each page owns a single concern.
+A clean, readable framework for pretraining language models from scratch.
+GPT-Simple handles the full LLM pretraining workflow — tokenization, streaming
+data loading, multi-GPU training, deterministic stop/resume, and inference —
+through a single YAML config and a small CLI.
+
+## Install
+
+```bash
+pip install gpt-simple-lm
+```
+
+The distribution is named `gpt-simple-lm`; you import it as `gpt_simple` and run
+the `gpt-simple` CLI. For source installs and optional extras, see the
+[project README](https://github.com/lb-off/gpt-simple/blob/main/README.md).
+
+## Quick start
+
+```bash
+gpt-simple init -o config.yaml                    # write a commented config template
+gpt-simple tokenize --input_dir ./raw_data \
+  --output_dir ./data/tokenized --tokenizer_path gpt2
+gpt-simple train --config config.yaml             # add --nproc_per_node N for multi-GPU
+gpt-simple generate --output-dir ./outputs --prompt "Once upon a time"
+```
+
+New here? Start with the [Training guide](training.md); every config field is
+documented in the [Configuration reference](configuration.md).
 
 ## Guides
+
+These pages go deeper than the quick start above — each owns a single concern.
 
 | Guide | What it covers |
 | ----- | -------------- |
