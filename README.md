@@ -1,6 +1,7 @@
 # GPT-Simple
 
 [![CI](https://github.com/lb-off/gpt-simple/actions/workflows/ci.yml/badge.svg)](https://github.com/lb-off/gpt-simple/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/gpt-simple-lm.svg)](https://pypi.org/project/gpt-simple-lm/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -41,7 +42,8 @@ pip install "gpt-simple-lm[rich]"      # optional: prettier (rich-formatted) CLI
 ```
 
 The distribution is named `gpt-simple-lm`; you import it as `gpt_simple` and
-run the `gpt-simple` CLI.
+run the `gpt-simple` CLI. All released versions are published on
+[PyPI](https://pypi.org/project/gpt-simple-lm/).
 
 From source (development):
 
