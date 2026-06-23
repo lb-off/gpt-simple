@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gpt-simple-lm"
-version = "0.1.1"
+version = "0.1.2"
 description = "A clean, efficient framework for pretraining language models from scratch"
 readme = "README.md"
 license = {text = "MIT"}

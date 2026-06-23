@@ -15,7 +15,7 @@ from gpt_simple.train import TrainingResult, train
 # metadata so the two can't drift. Falls back when running from a source
 # tree that hasn't been installed.
 try:
-    __version__ = version("gpt-simple")
+    __version__ = version("gpt-simple-lm")
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "0.0.0+unknown"
 
