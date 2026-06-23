@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gpt-simple-lm"
-version = "0.1.0"
+version = "0.1.1"
 description = "A clean, efficient framework for pretraining language models from scratch"
 readme = "README.md"
 license = {text = "MIT"}
@@ -31,7 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 wandb = ["wandb>=0.15.0"]
-cli = ["rich>=13.0"]
+rich = ["rich>=13.0"]
 dev = [
     "pytest>=7.0",
     "ruff>=0.1.0",

@@ -35,10 +35,20 @@ architecture ready to train out of the box.
 ## Installation
 
 ```bash
-pip install -e ".[dev]"     # from source (development)
-pip install .               # core only
-pip install ".[wandb]"      # optional: Weights & Biases logging
-pip install ".[cli]"        # optional: rich-formatted CLI output
+pip install gpt-simple-lm              # from PyPI
+pip install "gpt-simple-lm[wandb]"     # optional: Weights & Biases logging
+pip install "gpt-simple-lm[rich]"      # optional: prettier (rich-formatted) CLI output
+```
+
+The distribution is named `gpt-simple-lm`; you import it as `gpt_simple` and
+run the `gpt-simple` CLI.
+
+From source (development):
+
+```bash
+git clone https://github.com/lb-off/gpt-simple
+cd gpt-simple
+pip install -e ".[dev]"
 ```
 
 ## Quick start
